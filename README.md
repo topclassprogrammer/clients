@@ -1,4 +1,4 @@
-This project shows how to work with a clients database. It allows you to:
+This project shows how to work with a clients database. It allows you to do the following things:
 - create two tables
 - add a new client
 - add a new phone number to an existing client
