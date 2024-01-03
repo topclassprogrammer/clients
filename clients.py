@@ -36,7 +36,7 @@ class Clients:
     def _get_phone_id(self, phone_number):
         cur.execute("""
             SELECT phone_id FROM phones
-            WHERE phone_number = %s
+            WHERE phone_number = %s;
         """, (phone_number,))
         return cur.fetchone()
 
@@ -104,7 +104,7 @@ class Clients:
         for phone_number in all_phone_numbers:
             cur.execute("""
                 DELETE FROM phones
-                WHERE phone_number = %s
+                WHERE phone_number = %s;
             """, (phone_number,))
         cur.execute("""
             DELETE FROM clients
@@ -116,32 +116,28 @@ class Clients:
         for arg in args:
             cur.execute("""
                 SELECT * FROM clients
-                WHERE first_name = %s
+                WHERE first_name = %s;
             """, (arg,))
             res = cur.fetchall()
             result.extend(res)
             cur.execute("""
                 SELECT * FROM clients
-                WHERE last_name = %s
+                WHERE last_name = %s;
             """, (arg,))
             res = cur.fetchall()
             result.extend(res)
             cur.execute("""
                 SELECT * FROM clients
-                WHERE email = %s
+                WHERE email = %s;
                 """, (arg,))
             res = cur.fetchall()
             result.extend(res)
             if arg.isdigit and len(arg) == 11:
                 cur.execute("""
-                    SELECT client_id FROM phones
-                    WHERE phone_number = %s
-                    """, (arg,))
-                client_id = cur.fetchall()
-                cur.execute("""
-                    SELECT * FROM clients
-                    WHERE client_id = %s
-                """, (client_id[0][0],))
+                SELECT * FROM clients
+                WHERE client_id = (SELECT client_id FROM phones
+                WHERE phone_number = %s);
+                """, (arg,))
                 res = cur.fetchall()
                 result.extend(res)
         print(*result)
